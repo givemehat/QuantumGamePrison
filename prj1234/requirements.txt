@@ -1,0 +1,18 @@
+# Quantum Prisoner's Dilemma — Python dependencies
+# Install with: pip install -r requirements.txt
+
+# --- Core quantum computing ---
+qiskit>=1.0.0
+qiskit-aer>=0.13.0        # Optional: hardware-like simulation backend
+
+# --- Scientific computing ---
+numpy>=1.24.0
+
+# --- Visualisation ---
+matplotlib>=3.7.0
+
+# --- Optional: YAML config file support ---
+# pyyaml>=6.0
+
+# --- Development / testing ---
+pytest>=7.4.0
