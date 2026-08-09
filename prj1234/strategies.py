@@ -33,6 +33,7 @@ logger = logging.getLogger(__name__)
 
 # ── base class ────────────────────────────────────────────────────────────────
 
+
 class BaseStrategy(ABC):
     """Abstract base for all player strategies."""
 
@@ -49,6 +50,7 @@ class BaseStrategy(ABC):
 
 
 # ── classical strategies ──────────────────────────────────────────────────────
+
 
 class ClassicalFixed(BaseStrategy):
     """Always return the same cooperation probability.
@@ -130,6 +132,7 @@ class ClassicalTitForTat(BaseStrategy):
 
 # ── quantum strategies ────────────────────────────────────────────────────────
 
+
 class QuantumRy(BaseStrategy):
     """Quantum strategy using Ry-angle encoding.
 
@@ -201,6 +204,7 @@ class QuantumHRy(BaseStrategy):
 
 # ── parameterized strategy descriptor ─────────────────────────────────────────
 
+
 @dataclass
 class StrategySpec:
     """Complete specification for a player's strategy in an experiment.
@@ -242,5 +246,12 @@ class StrategySpec:
         return cls(self.prob)
 
 
-STRATEGY_TYPES = ["classical", "quantum_ry", "quantum_rx", "quantum_h_ry", "always_c", "always_d"]
+STRATEGY_TYPES = [
+    "classical",
+    "quantum_ry",
+    "quantum_rx",
+    "quantum_h_ry",
+    "always_c",
+    "always_d",
+]
 """All valid strategy type identifiers."""

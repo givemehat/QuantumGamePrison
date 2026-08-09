@@ -24,9 +24,9 @@ from dataclasses import dataclass
 from typing import Dict, Tuple
 
 # Type aliases
-Move = str                              # "C" or "D"
-Outcome = Tuple[Move, Move]             # (move_A, move_B)
-Payoff = Tuple[float, float]            # (score_A, score_B)
+Move = str  # "C" or "D"
+Outcome = Tuple[Move, Move]  # (move_A, move_B)
+Payoff = Tuple[float, float]  # (score_A, score_B)
 PayoffMatrix = Dict[Outcome, Payoff]
 
 
@@ -89,7 +89,7 @@ class PayoffModel:
 STANDARD_PD = PayoffModel(
     name="standard_pd",
     description="Classic Prisoner's Dilemma: mutual cooperation rewarded, "
-                "defection tempting.",
+    "defection tempting.",
     matrix={
         ("C", "C"): (3.0, 3.0),
         ("C", "D"): (0.0, 5.0),

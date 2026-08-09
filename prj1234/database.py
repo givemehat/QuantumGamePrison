@@ -63,6 +63,7 @@ CREATE INDEX IF NOT EXISTS idx_gr_experiment
 
 # ── connection helper ─────────────────────────────────────────────────────────
 
+
 @contextmanager
 def _connect(db_path: str) -> Generator[sqlite3.Connection, None, None]:
     """Context manager yielding an initialised connection with row_factory set.
@@ -87,6 +88,7 @@ def _connect(db_path: str) -> Generator[sqlite3.Connection, None, None]:
 
 # ── initialisation ────────────────────────────────────────────────────────────
 
+
 def initialise_db(db_path: str = DEFAULT_DB_PATH) -> None:
     """Ensure the database schema exists (idempotent).
 
@@ -101,6 +103,7 @@ def initialise_db(db_path: str = DEFAULT_DB_PATH) -> None:
 
 
 # ── experiments ───────────────────────────────────────────────────────────────
+
 
 def insert_experiment(
     config: ExperimentConfig,
@@ -141,7 +144,9 @@ def insert_experiment(
     return experiment_id
 
 
-def get_experiment(experiment_id: int, db_path: str = DEFAULT_DB_PATH) -> ExperimentConfig:
+def get_experiment(
+    experiment_id: int, db_path: str = DEFAULT_DB_PATH
+) -> ExperimentConfig:
     """Retrieve an experiment by its primary key.
 
     Raises
@@ -162,9 +167,7 @@ def list_experiments(db_path: str = DEFAULT_DB_PATH) -> List[ExperimentConfig]:
     """Return all experiments ordered by creation time (newest first)."""
     initialise_db(db_path)
     with _connect(db_path) as conn:
-        rows = conn.execute(
-            "SELECT * FROM experiments ORDER BY id DESC"
-        ).fetchall()
+        rows = conn.execute("SELECT * FROM experiments ORDER BY id DESC").fetchall()
     return [ExperimentConfig.from_row(dict(r)) for r in rows]
 
 
@@ -184,6 +187,7 @@ def delete_experiment(experiment_id: int, db_path: str = DEFAULT_DB_PATH) -> int
 
 
 # ── game results ──────────────────────────────────────────────────────────────
+
 
 def insert_game_runs(
     runs: List[GameRun],
@@ -219,7 +223,11 @@ def insert_game_runs(
     ]
     with _connect(db_path) as conn:
         conn.executemany(sql, data)
-    logger.debug("Inserted %d game_results for experiment_id=%d.", len(runs), runs[0].experiment_id)
+    logger.debug(
+        "Inserted %d game_results for experiment_id=%d.",
+        len(runs),
+        runs[0].experiment_id,
+    )
 
 
 def fetch_runs(
@@ -263,7 +271,9 @@ def fetch_runs_by_prob(
         ORDER BY id
     """
     with _connect(db_path) as conn:
-        rows = conn.execute(sql, (experiment_id, player_a_prob, player_b_prob)).fetchall()
+        rows = conn.execute(
+            sql, (experiment_id, player_a_prob, player_b_prob)
+        ).fetchall()
     return [dict(r) for r in rows]
 
 
@@ -277,6 +287,7 @@ def count_runs(experiment_id: int, db_path: str = DEFAULT_DB_PATH) -> int:
 
 
 # ── export ────────────────────────────────────────────────────────────────────
+
 
 def export_csv(
     experiment_id: int,

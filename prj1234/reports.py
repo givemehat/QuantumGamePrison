@@ -116,7 +116,9 @@ def generate_report(
     strategy_type = experiment.strategy_type
     encoding = cfg.get("encoding", "ry")
     entanglement = cfg.get("entanglement", "none")
-    iterations = cfg.get("iterations") or cfg.get("iterations_per_cell") or stats.total_runs
+    iterations = (
+        cfg.get("iterations") or cfg.get("iterations_per_cell") or stats.total_runs
+    )
     pa_prob = cfg.get("player_a_prob", stats.avg_prob_a)
     pb_prob = cfg.get("player_b_prob", stats.avg_prob_b)
     seed = cfg.get("seed", "not set")
@@ -126,7 +128,9 @@ def generate_report(
     sections: List[str] = []
 
     sections.append(f"# Experiment Report: {experiment.name}")
-    sections.append(f"*Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}*\n")
+    sections.append(
+        f"*Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}*\n"
+    )
 
     sections.append("## 1. Experiment Metadata\n")
     sections.append(

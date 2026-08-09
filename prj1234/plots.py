@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import matplotlib
+
 matplotlib.use("Agg")  # non-interactive backend — safe in all environments
 import matplotlib.pyplot as plt
 import numpy as np
@@ -55,6 +56,7 @@ def _save_and_show(fig: plt.Figure, filepath: str, show: bool) -> str:
 
 
 # ── outcome bar chart ─────────────────────────────────────────────────────────
+
 
 def plot_outcome_bar(
     experiment_id: int,
@@ -95,7 +97,9 @@ def plot_outcome_bar(
             bar.get_x() + bar.get_width() / 2,
             bar.get_height() + total * 0.005,
             f"{100*val/total:.1f}%",
-            ha="center", va="bottom", fontsize=9,
+            ha="center",
+            va="bottom",
+            fontsize=9,
         )
     fig.tight_layout()
     filepath = str(Path(save_dir) / f"experiment_{experiment_id}_outcome_bar.png")
@@ -103,6 +107,7 @@ def plot_outcome_bar(
 
 
 # ── score over runs line plot ─────────────────────────────────────────────────
+
 
 def plot_score_line(
     experiment_id: int,
@@ -139,6 +144,7 @@ def plot_score_line(
 
 # ── probability vs score scatter ──────────────────────────────────────────────
 
+
 def plot_prob_vs_score(
     experiment_id: int,
     save_dir: str = "plots",
@@ -168,6 +174,7 @@ def plot_prob_vs_score(
 
 # ── score histogram ────────────────────────────────────────────────────────────
 
+
 def plot_score_histogram(
     experiment_id: int,
     bins: int = 20,
@@ -194,6 +201,7 @@ def plot_score_histogram(
 
 # ── payoff heatmap (grid experiments) ─────────────────────────────────────────
 
+
 def plot_heatmap(
     experiment_id: int,
     player: str = "a",
@@ -212,9 +220,7 @@ def plot_heatmap(
     pa_vals, pb_vals, z = compute_grid_heatmap(rows, player=player)
 
     if not pa_vals or not pb_vals:
-        raise ValueError(
-            f"Experiment #{experiment_id} has no grid data for a heatmap."
-        )
+        raise ValueError(f"Experiment #{experiment_id} has no grid data for a heatmap.")
 
     z_arr = np.array(z)  # shape (n_pa, n_pb)
 
@@ -227,13 +233,12 @@ def plot_heatmap(
         f"Payoff Heatmap (Player {player.upper()}) — Experiment #{experiment_id}"
     )
     fig.tight_layout()
-    filepath = str(
-        Path(save_dir) / f"experiment_{experiment_id}_heatmap_{player}.png"
-    )
+    filepath = str(Path(save_dir) / f"experiment_{experiment_id}_heatmap_{player}.png")
     return _save_and_show(fig, filepath, show)
 
 
 # ── quantum vs classical comparison ──────────────────────────────────────────
+
 
 def plot_quantum_vs_classical(
     quantum_experiment_id: int,
@@ -263,7 +268,9 @@ def plot_quantum_vs_classical(
 
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.bar(x - width / 2, freqs_q, width, label=f"Quantum (#{quantum_experiment_id})")
-    ax.bar(x + width / 2, freqs_c, width, label=f"Classical (#{classical_experiment_id})")
+    ax.bar(
+        x + width / 2, freqs_c, width, label=f"Classical (#{classical_experiment_id})"
+    )
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.set_ylabel("Relative Frequency")
@@ -271,12 +278,14 @@ def plot_quantum_vs_classical(
     ax.legend()
     fig.tight_layout()
     filepath = str(
-        Path(save_dir) / f"quantum_{quantum_experiment_id}_vs_classical_{classical_experiment_id}.png"
+        Path(save_dir)
+        / f"quantum_{quantum_experiment_id}_vs_classical_{classical_experiment_id}.png"
     )
     return _save_and_show(fig, filepath, show)
 
 
 # ── generate all standard plots ───────────────────────────────────────────────
+
 
 def generate_all_plots(
     experiment_id: int,
@@ -301,8 +310,9 @@ def generate_all_plots(
 
     def _try(key: str, fn, **kwargs):
         try:
-            generated[key] = fn(experiment_id, save_dir=save_dir, show=show,
-                                db_path=db_path, **kwargs)
+            generated[key] = fn(
+                experiment_id, save_dir=save_dir, show=show, db_path=db_path, **kwargs
+            )
         except Exception as exc:
             logger.warning("Could not generate '%s' plot: %s", key, exc)
 

@@ -109,12 +109,17 @@ class GridRunConfig:
 
     def _validate(self) -> None:
         errors: List[str] = []
-        for lst_name, lst in (("pa_values", self.pa_values), ("pb_values", self.pb_values)):
+        for lst_name, lst in (
+            ("pa_values", self.pa_values),
+            ("pb_values", self.pb_values),
+        ):
             for v in lst:
                 if not (0.0 <= float(v) <= 1.0):
                     errors.append(f"{lst_name} contains {v!r} which is not in [0, 1].")
         if self.iterations_per_cell <= 0:
-            errors.append(f"iterations_per_cell={self.iterations_per_cell!r} must be positive.")
+            errors.append(
+                f"iterations_per_cell={self.iterations_per_cell!r} must be positive."
+            )
         if not self.pa_values or not self.pb_values:
             errors.append("pa_values and pb_values must be non-empty.")
         if errors:
@@ -141,6 +146,7 @@ class GridRunConfig:
 
 
 # ── loaders ───────────────────────────────────────────────────────────────────
+
 
 def _parse_config_dict(data: Dict[str, Any]) -> SingleRunConfig | GridRunConfig:
     """Dispatch a raw config dict to the appropriate config dataclass."""

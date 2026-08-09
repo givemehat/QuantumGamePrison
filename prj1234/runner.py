@@ -79,7 +79,10 @@ class ExperimentRunner:
 
         logger.info(
             "Starting single experiment id=%d  pA=%.3f  pB=%.3f  iterations=%d",
-            experiment_id, config.player_a_prob, config.player_b_prob, config.iterations,
+            experiment_id,
+            config.player_a_prob,
+            config.player_b_prob,
+            config.iterations,
         )
         t0 = time.perf_counter()
 
@@ -92,7 +95,9 @@ class ExperimentRunner:
         elapsed = time.perf_counter() - t0
         logger.info(
             "Experiment id=%d complete: %d rounds in %.2fs.",
-            experiment_id, config.iterations, elapsed,
+            experiment_id,
+            config.iterations,
+            elapsed,
         )
         return experiment_id
 
@@ -130,7 +135,9 @@ class ExperimentRunner:
         total_cells = len(config.pa_values) * len(config.pb_values)
         logger.info(
             "Starting grid experiment id=%d  cells=%d  total_runs=%d",
-            experiment_id, total_cells, config.total_runs,
+            experiment_id,
+            total_cells,
+            config.total_runs,
         )
         t0 = time.perf_counter()
 
@@ -154,7 +161,10 @@ class ExperimentRunner:
         elapsed = time.perf_counter() - t0
         logger.info(
             "Grid experiment id=%d complete: %d cells, %d total runs in %.2fs.",
-            experiment_id, cells_done, config.total_runs, elapsed,
+            experiment_id,
+            cells_done,
+            config.total_runs,
+            elapsed,
         )
         return experiment_id
 

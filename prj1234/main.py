@@ -49,27 +49,33 @@ logger = logging.getLogger("qpd.cli")
 
 # ── lazy imports (keep startup fast) ─────────────────────────────────────────
 
+
 def _runner():
     from simulation.runner import ExperimentRunner
+
     return ExperimentRunner
 
 
 def _single_cfg():
     from simulation.config import SingleRunConfig
+
     return SingleRunConfig
 
 
 def _grid_cfg():
     from simulation.config import GridRunConfig, make_grid_from_range
+
     return GridRunConfig, make_grid_from_range
 
 
 def _enc_ent():
     from quantum.quantum_core import EncodingScheme, EntanglementMode
+
     return EncodingScheme, EntanglementMode
 
 
 # ── argument helpers ──────────────────────────────────────────────────────────
+
 
 def _prob(value: str) -> float:
     try:
@@ -93,6 +99,7 @@ def _positive_int(value: str) -> int:
 
 # ── CLI builder ───────────────────────────────────────────────────────────────
 
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="qpd",
@@ -100,11 +107,14 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
-        "--db", default="quantum_game.db", metavar="PATH",
+        "--db",
+        default="quantum_game.db",
+        metavar="PATH",
         help="SQLite database file (default: quantum_game.db).",
     )
     parser.add_argument(
-        "--log-level", default="INFO",
+        "--log-level",
+        default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR"],
         help="Logging verbosity.",
     )
@@ -120,28 +130,48 @@ def build_parser() -> argparse.ArgumentParser:
 
     # simulate single
     s = sim_sub.add_parser("single", help="Run a single fixed-probability experiment.")
-    s.add_argument("--player-a", type=_prob, required=True, metavar="FLOAT",
-                   help="Player A cooperation probability [0,1].")
-    s.add_argument("--player-b", type=_prob, required=True, metavar="FLOAT",
-                   help="Player B cooperation probability [0,1].")
-    s.add_argument("--iterations", type=_positive_int, default=1000,
-                   help="Number of game rounds (default: 1000).")
+    s.add_argument(
+        "--player-a",
+        type=_prob,
+        required=True,
+        metavar="FLOAT",
+        help="Player A cooperation probability [0,1].",
+    )
+    s.add_argument(
+        "--player-b",
+        type=_prob,
+        required=True,
+        metavar="FLOAT",
+        help="Player B cooperation probability [0,1].",
+    )
+    s.add_argument(
+        "--iterations",
+        type=_positive_int,
+        default=1000,
+        help="Number of game rounds (default: 1000).",
+    )
     _add_common_sim_args(s)
 
     # simulate grid
     g = sim_sub.add_parser("grid", help="Run a 2-D probability sweep experiment.")
     g.add_argument("--pa-start", type=_prob, default=0.0)
-    g.add_argument("--pa-end",   type=_prob, default=1.0)
-    g.add_argument("--pa-step",  type=float, default=0.1)
+    g.add_argument("--pa-end", type=_prob, default=1.0)
+    g.add_argument("--pa-step", type=float, default=0.1)
     g.add_argument("--pb-start", type=_prob, default=0.0)
-    g.add_argument("--pb-end",   type=_prob, default=1.0)
-    g.add_argument("--pb-step",  type=float, default=0.1)
-    g.add_argument("--iterations-per-cell", type=_positive_int, default=300,
-                   help="Rounds per grid cell (default: 300).")
+    g.add_argument("--pb-end", type=_prob, default=1.0)
+    g.add_argument("--pb-step", type=float, default=0.1)
+    g.add_argument(
+        "--iterations-per-cell",
+        type=_positive_int,
+        default=300,
+        help="Rounds per grid cell (default: 300).",
+    )
     _add_common_sim_args(g)
 
     # simulate from-file
-    f = sim_sub.add_parser("from-file", help="Run experiment from JSON/YAML config file.")
+    f = sim_sub.add_parser(
+        "from-file", help="Run experiment from JSON/YAML config file."
+    )
     f.add_argument("config_file", help="Path to JSON or YAML config file.")
 
     # ── analyze ───────────────────────────────────────────────────────────────
@@ -154,8 +184,12 @@ def build_parser() -> argparse.ArgumentParser:
     plts = ana_sub.add_parser("plots", help="Generate and save plots.")
     plts.add_argument("--experiment-id", type=int, required=True)
     plts.add_argument("--save-dir", default="plots")
-    plts.add_argument("--show", action="store_true", help="Display plots interactively.")
-    plts.add_argument("--grid", action="store_true", help="Include heatmap plots (grid experiments).")
+    plts.add_argument(
+        "--show", action="store_true", help="Display plots interactively."
+    )
+    plts.add_argument(
+        "--grid", action="store_true", help="Include heatmap plots (grid experiments)."
+    )
 
     # ── report ────────────────────────────────────────────────────────────────
     rep = sub.add_parser("report", help="Generate reports.")
@@ -163,13 +197,21 @@ def build_parser() -> argparse.ArgumentParser:
 
     gen = rep_sub.add_parser("generate", help="Generate a Markdown report.")
     gen.add_argument("--experiment-id", type=int, required=True)
-    gen.add_argument("--output", default=None, metavar="PATH",
-                     help="Output Markdown file (default: reports/experiment_<id>.md).")
-    gen.add_argument("--include-plots", action="store_true",
-                     help="Also generate plots and embed references.")
+    gen.add_argument(
+        "--output",
+        default=None,
+        metavar="PATH",
+        help="Output Markdown file (default: reports/experiment_<id>.md).",
+    )
+    gen.add_argument(
+        "--include-plots",
+        action="store_true",
+        help="Also generate plots and embed references.",
+    )
     gen.add_argument("--plots-dir", default="plots")
-    gen.add_argument("--grid", action="store_true",
-                     help="Include heatmaps (for grid experiments).")
+    gen.add_argument(
+        "--grid", action="store_true", help="Include heatmaps (for grid experiments)."
+    )
 
     # ── export ────────────────────────────────────────────────────────────────
     exp = sub.add_parser("export", help="Export data.")
@@ -185,22 +227,33 @@ def build_parser() -> argparse.ArgumentParser:
 def _add_common_sim_args(p: argparse.ArgumentParser) -> None:
     """Attach strategy/payoff/meta arguments shared by all simulate subcommands."""
     p.add_argument(
-        "--strategy-type", default="quantum_ry",
-        choices=["quantum_ry", "quantum_rx", "quantum_h_ry", "classical",
-                 "always_c", "always_d"],
+        "--strategy-type",
+        default="quantum_ry",
+        choices=[
+            "quantum_ry",
+            "quantum_rx",
+            "quantum_h_ry",
+            "classical",
+            "always_c",
+            "always_d",
+        ],
         help="Strategy encoding type (default: quantum_ry).",
     )
     p.add_argument(
-        "--payoff-mode", default="standard_pd",
+        "--payoff-mode",
+        default="standard_pd",
         choices=["standard_pd", "harsh_pd", "lenient_pd", "stag_hunt", "chicken"],
         help="Payoff matrix variant (default: standard_pd).",
     )
     p.add_argument(
-        "--encoding", default="ry", choices=["ry", "rx", "h_ry"],
+        "--encoding",
+        default="ry",
+        choices=["ry", "rx", "h_ry"],
         help="Quantum angle encoding (default: ry).",
     )
     p.add_argument(
-        "--entanglement", default="none",
+        "--entanglement",
+        default="none",
         choices=["none", "cnot", "cz", "bell_init"],
         help="Entanglement mode (default: none).",
     )
@@ -211,8 +264,10 @@ def _add_common_sim_args(p: argparse.ArgumentParser) -> None:
 
 # ── command handlers ──────────────────────────────────────────────────────────
 
+
 def cmd_list(args: argparse.Namespace) -> int:
     from storage.database import list_experiments
+
     experiments = list_experiments(args.db)
     if not experiments:
         print("No experiments found.")
@@ -249,8 +304,12 @@ def cmd_simulate_single(args: argparse.Namespace) -> int:
     exp_id = runner.run_single(config)
     print(f"\n✓ Experiment #{exp_id} complete.")
     print(f"  Rounds    : {config.iterations:,}")
-    print(f"  Player A  : p={config.player_a_prob:.3f}  strategy={config.strategy_type}")
-    print(f"  Player B  : p={config.player_b_prob:.3f}  strategy={config.strategy_type}")
+    print(
+        f"  Player A  : p={config.player_a_prob:.3f}  strategy={config.strategy_type}"
+    )
+    print(
+        f"  Player B  : p={config.player_b_prob:.3f}  strategy={config.strategy_type}"
+    )
     print(f"  Payoff    : {config.payoff_mode}")
     print(f"  Database  : {args.db}\n")
     return 0
@@ -261,8 +320,12 @@ def cmd_simulate_grid(args: argparse.Namespace) -> int:
     EncodingScheme, EntanglementMode = _enc_ent()
 
     config = make_grid_from_range(
-        pa_start=args.pa_start, pa_end=args.pa_end, pa_step=args.pa_step,
-        pb_start=args.pb_start, pb_end=args.pb_end, pb_step=args.pb_step,
+        pa_start=args.pa_start,
+        pa_end=args.pa_end,
+        pa_step=args.pa_step,
+        pb_start=args.pb_start,
+        pb_end=args.pb_end,
+        pb_step=args.pb_step,
         iterations_per_cell=args.iterations_per_cell,
         strategy_type=args.strategy_type,
         payoff_mode=args.payoff_mode,
@@ -285,12 +348,15 @@ def cmd_simulate_from_file(args: argparse.Namespace) -> int:
     path = args.config_file
     if path.endswith(".yaml") or path.endswith(".yml"):
         from simulation.config import load_config_from_yaml
+
         config = load_config_from_yaml(path)
     else:
         from simulation.config import load_config_from_json
+
         config = load_config_from_json(path)
 
     from simulation.config import SingleRunConfig, GridRunConfig
+
     runner = _runner()(db_path=args.db)
 
     if isinstance(config, GridRunConfig):
@@ -305,6 +371,7 @@ def cmd_simulate_from_file(args: argparse.Namespace) -> int:
 def cmd_analyze_summary(args: argparse.Namespace) -> int:
     from analysis.summary import compute_experiment_stats, print_summary
     from storage.database import get_experiment
+
     exp = get_experiment(args.experiment_id, args.db)
     stats = compute_experiment_stats(args.experiment_id, args.db)
     print_summary(stats, exp)
@@ -313,6 +380,7 @@ def cmd_analyze_summary(args: argparse.Namespace) -> int:
 
 def cmd_analyze_plots(args: argparse.Namespace) -> int:
     from analysis.plots import generate_all_plots
+
     paths = generate_all_plots(
         args.experiment_id,
         save_dir=args.save_dir,
@@ -329,9 +397,11 @@ def cmd_analyze_plots(args: argparse.Namespace) -> int:
 
 def cmd_report_generate(args: argparse.Namespace) -> int:
     from analysis.reports import generate_report
+
     plot_paths = {}
     if args.include_plots:
         from analysis.plots import generate_all_plots
+
         plot_paths = generate_all_plots(
             args.experiment_id,
             save_dir=args.plots_dir,
@@ -352,12 +422,14 @@ def cmd_report_generate(args: argparse.Namespace) -> int:
 
 def cmd_export_csv(args: argparse.Namespace) -> int:
     from storage.database import export_csv
+
     n = export_csv(args.experiment_id, args.output, args.db)
     print(f"\n✓ Exported {n:,} rows to: {args.output}\n")
     return 0
 
 
 # ── dispatch ──────────────────────────────────────────────────────────────────
+
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = build_parser()

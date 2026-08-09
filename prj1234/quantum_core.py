@@ -49,8 +49,10 @@ except ImportError:  # pragma: no cover
 
 # ── enumerations ─────────────────────────────────────────────────────────────
 
+
 class EncodingScheme(str, Enum):
     """Probability-to-angle encoding strategy."""
+
     RY = "ry"
     RX = "rx"
     H_RY = "h_ry"
@@ -58,6 +60,7 @@ class EncodingScheme(str, Enum):
 
 class EntanglementMode(str, Enum):
     """Post-encoding entangling operation."""
+
     NONE = "none"
     CNOT = "cnot"
     CZ = "cz"
@@ -109,6 +112,7 @@ def bitstring_to_moves(bitstring: str) -> Tuple[str, str]:
 
 # ── angle helpers ─────────────────────────────────────────────────────────────
 
+
 def prob_to_ry_angle(prob: float) -> float:
     """Convert a cooperation probability to an Ry rotation angle.
 
@@ -137,6 +141,7 @@ def prob_to_rx_angle(prob: float) -> float:
 
 
 # ── circuit builders ──────────────────────────────────────────────────────────
+
 
 def build_circuit(
     prob_a: float,
@@ -213,6 +218,7 @@ def _compute_angle(prob: float, encoding: EncodingScheme) -> float:
 
 
 # ── probability distributions ─────────────────────────────────────────────────
+
 
 def get_exact_probabilities(
     prob_a: float,

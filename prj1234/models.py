@@ -100,9 +100,11 @@ class ExperimentConfig:
             strategy_type=row["strategy_type"],
             payoff_mode=row["payoff_mode"],
             config_json=cfg,
-            created_at=datetime.fromisoformat(row["created_at"])
-            if isinstance(row.get("created_at"), str)
-            else row.get("created_at", datetime.utcnow()),
+            created_at=(
+                datetime.fromisoformat(row["created_at"])
+                if isinstance(row.get("created_at"), str)
+                else row.get("created_at", datetime.utcnow())
+            ),
         )
 
     def to_summary_dict(self) -> Dict[str, Any]:

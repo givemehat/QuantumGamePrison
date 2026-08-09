@@ -36,6 +36,7 @@ logger = logging.getLogger(__name__)
 
 # ── round result dataclass ────────────────────────────────────────────────────
 
+
 class RoundResult:
     """Container for the result of a single game round.
 
@@ -49,8 +50,15 @@ class RoundResult:
         Two-character label, e.g. ``"CC"``, ``"CD"``.
     """
 
-    __slots__ = ("move_a", "move_b", "score_a", "score_b", "outcome",
-                 "player_a_prob", "player_b_prob")
+    __slots__ = (
+        "move_a",
+        "move_b",
+        "score_a",
+        "score_b",
+        "outcome",
+        "player_a_prob",
+        "player_b_prob",
+    )
 
     def __init__(
         self,
@@ -77,6 +85,7 @@ class RoundResult:
 
 
 # ── game engine ───────────────────────────────────────────────────────────────
+
 
 class GameEngine:
     """Orchestrates quantum sampling and payoff computation for many rounds.
@@ -138,7 +147,11 @@ class GameEngine:
 
         logger.debug(
             "Playing %d rounds: pA=%.3f, pB=%.3f, encoding=%s, entanglement=%s",
-            n_rounds, prob_a, prob_b, self.encoding.value, self.entanglement.value,
+            n_rounds,
+            prob_a,
+            prob_b,
+            self.encoding.value,
+            self.entanglement.value,
         )
 
         move_pairs = sample_outcomes(

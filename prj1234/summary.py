@@ -26,6 +26,7 @@ OUTCOMES = ["CC", "CD", "DC", "DD"]
 
 # ── core statistics ───────────────────────────────────────────────────────────
 
+
 def compute_outcome_frequencies(rows: List[Dict[str, Any]]) -> Dict[str, int]:
     """Count occurrences of each outcome.
 
@@ -69,7 +70,14 @@ def compute_score_stats(
     key = f"player_{player}_score"
     scores = [float(r[key]) for r in rows if key in r]
     if not scores:
-        return {"mean": 0.0, "median": 0.0, "std": 0.0, "min": 0.0, "max": 0.0, "variance": 0.0}
+        return {
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "variance": 0.0,
+        }
     arr = np.array(scores, dtype=float)
     return {
         "mean": float(np.mean(arr)),
@@ -228,10 +236,7 @@ def compute_grid_heatmap(
             accum.setdefault((i, j), []).append(float(row[score_key]))
 
     z: List[List[float]] = [
-        [
-            float(np.mean(accum.get((i, j), [0.0])))
-            for j in range(len(pb_set))
-        ]
+        [float(np.mean(accum.get((i, j), [0.0]))) for j in range(len(pb_set))]
         for i in range(len(pa_set))
     ]
     return pa_set, pb_set, z
