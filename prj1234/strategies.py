@@ -43,6 +43,7 @@ class BaseStrategy(ABC):
 
     @property
     def name(self) -> str:
+        """Return the human-readable name of the strategy."""
         return self.__class__.__name__
 
     def __repr__(self) -> str:
@@ -67,10 +68,12 @@ class ClassicalFixed(BaseStrategy):
         self._prob = prob
 
     def get_cooperation_prob(self) -> float:
+        """Return the strategy's fixed cooperation probability."""
         return self._prob
 
     @property
     def name(self) -> str:
+        """Return the identifier for this strategy type."""
         return "ClassicalFixed"
 
     def __repr__(self) -> str:
@@ -85,6 +88,7 @@ class ClassicalAlwaysC(ClassicalFixed):
 
     @property
     def name(self) -> str:
+        """Return the identifier for the always-cooperate strategy."""
         return "AlwaysCooperate"
 
 
@@ -96,6 +100,7 @@ class ClassicalAlwaysD(ClassicalFixed):
 
     @property
     def name(self) -> str:
+        """Return the identifier for the always-defect strategy."""
         return "AlwaysDefect"
 
 
@@ -148,14 +153,16 @@ class QuantumRy(BaseStrategy):
         self._prob = prob
 
     def get_cooperation_prob(self) -> float:
+        """Return the configured quantum cooperation probability."""
         return self._prob
-
     @property
     def encoding(self) -> EncodingScheme:
+        """Return the Ry encoding scheme used by this strategy."""
         return EncodingScheme.RY
 
     @property
     def name(self) -> str:
+        """Return the identifier for the Ry quantum strategy."""
         return "QuantumRy"
 
     def __repr__(self) -> str:
@@ -171,14 +178,16 @@ class QuantumRx(BaseStrategy):
         self._prob = prob
 
     def get_cooperation_prob(self) -> float:
+        """Return the configured quantum cooperation probability."""
         return self._prob
 
     @property
     def encoding(self) -> EncodingScheme:
+        """Return the Rx encoding scheme used by this strategy."""
         return EncodingScheme.RX
-
     @property
     def name(self) -> str:
+        """Return the identifier for the Rx quantum strategy."""
         return "QuantumRx"
 
 
@@ -191,14 +200,17 @@ class QuantumHRy(BaseStrategy):
         self._prob = prob
 
     def get_cooperation_prob(self) -> float:
+        """Return the configured quantum cooperation probability."""
         return self._prob
 
     @property
     def encoding(self) -> EncodingScheme:
+        """Return the H+Ry encoding scheme used by this strategy."""
         return EncodingScheme.H_RY
 
     @property
     def name(self) -> str:
+        """Return the identifier for the H+Ry quantum strategy."""
         return "QuantumHRy"
 
 
